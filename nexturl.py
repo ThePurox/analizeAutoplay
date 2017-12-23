@@ -1,6 +1,7 @@
 import subprocess
+import matplotlib.pyplot as plt
 
-N = 3
+N = 10
 webpages = "./webpages/"
 seed = "JWD1Fpdd4Pc"
 urlList = [seed]
@@ -11,32 +12,6 @@ class video():
         title = props[1]
         next = None
 
-    def getnext(self):
-        href = "href"
-        h4 = "</h4>"
-        nextt = "chstes Video"
-        hot = False
-        nextbool = False
-        properties = [href,"title"]
-        with open(webpages + self.url) as f:
-            for line in f:
-                if (nextbool and h4 in line):
-                    hot = True
-                    continue
-                nextbool = False
-                if nextt in line:
-                    nextbool = True
-                    continue
-                if (hot and href in line):
-                    hot = False
-                    props = []
-                    getProps()
-                    for prop in properties:
-                        start = line.rfind(prop)
-                        s = line[prop:]
-                        s1 = line.split('"')
-                        props.append(s1[1])
-                    self.next=video(props)
 
 def downloadWebpage(url):
     subprocess.call("wget 'youtube.com/watch?v=" + url + "'", shell=True)
@@ -80,6 +55,19 @@ def getNext(infile):
                 return s1[1]
 
 
+def views():
+    views = []
+    for i in range(N):
+        with open(webpages + urlList[i] ,"r") as infile:
+            for line in infile:
+                if "interactionCount" in line:
+                    s = line.split(" ")
+                    print s[1]
+                    s = s[1][:-1] #strip away \n at end of line
+                    views.append(int(s))
+    print views
+    plt.plot(views)
+    plt.show()
 
 
 # main function
@@ -87,5 +75,5 @@ def getNext(infile):
 for i in range(N):
     downloadWebpage(urlList[i])
     shrinkWebpage(urlList[i])
-    print i
+views()
 
