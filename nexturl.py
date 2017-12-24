@@ -14,19 +14,23 @@ class video():
 
 
 def downloadWebpage(url):
-    subprocess.call("wget 'youtube.com/watch?v=" + url + "'", shell=True)
+    subprocess.call("wget -q 'youtube.com/watch?v=" + url + "'", shell=True)
 def shrinkWebpage(url):
     file = "watch?v=" + url
     print file
-    nextUrl = getNext(file)
-    with open(file,"r") as infile:
-        with open(webpages + url ,"wb") as outfile:
-            outfile.write("nextUrl " + nextUrl + "\n")
-            for line in infile:
-                if "itemprop" in line:
-                    s = line.split('"')
-                    outfile.write(s[1] + " " + s[3] + "\n")
-    subprocess.call("rm " + "'watch?v=" + url + "'", shell=True)
+    if getNext(file):
+        nextUrl = urlList[-1]
+        with open(file,"r") as infile:
+            with open(webpages + url ,"wb") as outfile:
+                outfile.write("nextUrl " + nextUrl + "\n")
+                for line in infile:
+                    if "itemprop" in line:
+                        s = line.split('"')
+                        outfile.write(s[1] + " " + s[3] + "\n")
+        subprocess.call("rm " + "'watch?v=" + url + "'", shell=True)
+        return True
+    else:
+        return False
 def getNext(infile):
     href = "href"
     h4 = "</h4>"
@@ -51,14 +55,19 @@ def getNext(infile):
                 s1[1] = s1[1][1:]
                 s1 = s1[1].split("=")
                 print s1[1]
-                urlList.append(s1[1])
-                return s1[1]
+                if s1[1] in urlList:
+                    print "Url already in UrlList"
+                    return False
+                else:
+                    urlList.append(s1[1])
+                    return True
+                #return s1[1]
 
 
 def views():
     views = []
-    for i in range(N):
-        with open(webpages + urlList[i] ,"r") as infile:
+    for url in urlList:
+        with open(webpages + url ,"r") as infile:
             for line in infile:
                 if "interactionCount" in line:
                     s = line.split(" ")
@@ -74,6 +83,7 @@ def views():
 
 for i in range(N):
     downloadWebpage(urlList[i])
-    shrinkWebpage(urlList[i])
+    if not shrinkWebpage(urlList[i]):
+        break
 views()
 
