@@ -1,5 +1,6 @@
 import subprocess
 import matplotlib.pyplot as plt
+import os.path
 
 N = 10
 webpages = "./webpages/"
@@ -17,7 +18,6 @@ def downloadWebpage(url):
     subprocess.call("wget -q 'youtube.com/watch?v=" + url + "'", shell=True)
 def shrinkWebpage(url):
     file = "watch?v=" + url
-    print file
     if getNext(file):
         nextUrl = urlList[-1]
         with open(file,"r") as infile:
@@ -54,7 +54,6 @@ def getNext(infile):
                 s1 = line.split('"')
                 s1[1] = s1[1][1:]
                 s1 = s1[1].split("=")
-                print s1[1]
                 if s1[1] in urlList:
                     print "Url already in UrlList"
                     return False
@@ -63,27 +62,38 @@ def getNext(infile):
                     return True
                 #return s1[1]
 
+def getAttr(url, attr):
+    with open(webpages + url ,"r") as infile:
+        for line in infile:
+            if attr in line:
+                s = line.split(" ")
+                s = s[1][:-1] #strip away \n at end of line
+                infile.close()
+                return s
 
 def views():
     views = []
     for url in urlList:
-        with open(webpages + url ,"r") as infile:
-            for line in infile:
-                if "interactionCount" in line:
-                    s = line.split(" ")
-                    print s[1]
-                    s = s[1][:-1] #strip away \n at end of line
-                    views.append(int(s))
+        views.append(int(getAttr(url,"interactionCount")))
     print views
     plt.plot(views)
     plt.show()
 
 
+
 # main function
 
 for i in range(N):
-    downloadWebpage(urlList[i])
-    if not shrinkWebpage(urlList[i]):
-        break
+    if os.path.isfile(webpages + urlList[i]):
+        nextUrl = getAttr(urlList[i],"nextUrl")
+        if nextUrl in urlList:
+            print "Url already in UrlList"
+            break
+        else:
+            urlList.append(nextUrl)
+    else:
+        downloadWebpage(urlList[i])
+        if not shrinkWebpage(urlList[i]):
+            break
 views()
 
