@@ -7,11 +7,12 @@
 ** cookie management
 - cookies must not influence the outcome in order to make runs reproducible
 ** that should operate on data directly and that on files  
-* mandatory [0/6]
+* mandatory [0/7]
 ** TODO video class
 - should it have data structure already in it, i.e. ~next~ pointer?
 ** TODO data structure 
 - not necessarily a real tree, needs to have merging and branching
+- definitely not hierarchical 
 ** TODO visualization
 - tree if there is tree structure
 - otherwise draw links between videos and group them by category
@@ -20,14 +21,21 @@
 - youtube's tags are user defined, therefore not standardized
 ** TODO file structure
 - for easy export of data and combination of several such files
-- no idea yet, XML or something
+- no idea yet, ~JSON~ or something
 - should be expandable, if video class is expanded by new properties
 - should be easily importable, that function must only be able to operate on data directly and not on files
 ** TODO generating seeds
 - how to find the videos to start from
+- random generation of video IDs is impossible
+- random search request to youtube API?
+** TODO download thumbnails or link them dynamically in visualization
+- ~youtube-dl~ not necessary
+#+BEGIN_SRC
+https://i.ytimg.com/vi/{id}/maxresdefault.jpg
+#+END_SRC
 * improvements [0/3]
 ** TODO use ~urllib~ for fetching  
-** TODO use ~HtmlParser~ or ~BeautifulSoup~ for parsing html
+** TODO use ~HtmlParser~ or ~BeautifulSoup~ for parsing ~html~
 - that Manuel does not have to do so much hard work, pure fellow
 ** TODO possibility to combine resulting data from several runs and machines
 - ties in closely with underlying file structure
