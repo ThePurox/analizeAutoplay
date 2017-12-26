@@ -1,0 +1,33 @@
+#+STARTUP: indent
+#+TITLE: YouTube autoplay project
+* general
+** terminology
+- /data/ refers to data in memory during run-time, e.g. classes, lists
+- /files/ refer to data stored on hard disk
+** cookie management
+- cookies must not influence the outcome in order to make runs reproducible
+** that should operate on data directly and that on files  
+* mandatory [0/6]
+** TODO video class
+- should it have data structure already in it, i.e. ~next~ pointer?
+** TODO data structure 
+- not necessarily a real tree, needs to have merging and branching
+** TODO visualization
+- tree if there is tree structure
+- otherwise draw links between videos and group them by category
+** TODO categorize videos
+- use youtube's categories
+- youtube's tags are user defined, therefore not standardized
+** TODO file structure
+- for easy export of data and combination of several such files
+- no idea yet, XML or something
+- should be expandable, if video class is expanded by new properties
+- should be easily importable, that function must only be able to operate on data directly and not on files
+** TODO generating seeds
+- how to find the videos to start from
+* improvements [0/3]
+** TODO use ~urllib~ for fetching  
+** TODO use ~HtmlParser~ or ~BeautifulSoup~ for parsing html
+- that Manuel does not have to do so much hard work, pure fellow
+** TODO possibility to combine resulting data from several runs and machines
+- ties in closely with underlying file structure
