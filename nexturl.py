@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import subprocess
 import matplotlib.pyplot as plt
 import os.path
@@ -34,7 +35,7 @@ def shrinkWebpage(url):
 def getNext(infile):
     href = "href"
     h4 = "</h4>"
-    nextt = "chstes Video"
+    nexttList = ['Up next', 'Nächstes Video', 'À suivre', 'Siguiente']
     hot = False
     nextbool = False
     global urlList
@@ -44,9 +45,9 @@ def getNext(infile):
                 hot = True
                 continue
             nextbool = False
-            if nextt in line:
-                nextbool = True
-                continue
+            for nextt in nexttList:
+                if nextt in line:
+                    nextbool = True
             if (hot and href in line):
                 hot = False
                 start = line.rfind(href)
