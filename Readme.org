@@ -7,7 +7,7 @@
 ** cookie management
 - cookies must not influence the outcome in order to make runs reproducible
 ** that should operate on data directly and that on files  
-* mandatory [0/7]
+* mandatory [0/8]
 ** TODO video class
 - should it have data structure already in it, i.e. ~next~ pointer?
 ** TODO data structure 
@@ -29,10 +29,15 @@
 - random generation of video IDs is impossible
 - random search request to youtube API?
 ** TODO download thumbnails or link them dynamically in visualization
-- ~youtube-dl~ not necessary
 #+BEGIN_SRC
 https://i.ytimg.com/vi/{id}/maxresdefault.jpg
 #+END_SRC
+- ~youtube-dl~ not necessary
+** TODO make it multilingual 
+#+BEGIN_SRC python
+['Up next', 'Nächstes Video', 'À suivre', 'Siguiente']
+#+END_SRC
+- prevent falling for video titles matching the strings above
 * improvements [0/3]
 ** TODO use ~urllib~ for fetching  
 ** TODO use ~HtmlParser~ or ~BeautifulSoup~ for parsing ~html~
