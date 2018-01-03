@@ -3,7 +3,7 @@ import subprocess
 import matplotlib.pyplot as plt
 import os.path
 
-N = 10
+N = 10 # Maximum number of webpages downloaded if no merging is encounterd
 webpages = "./webpages/"
 seed = "JWD1Fpdd4Pc"
 urlList = [seed]
@@ -16,22 +16,21 @@ class video():
 
 
 def downloadWebpage(url):
-    subprocess.call("wget -q 'youtube.com/watch?v=" + url + "'", shell=True)
+    subprocess.call("wget  'youtube.com/watch?v=" + url + "'", shell=True)
 def shrinkWebpage(url):
     file = "watch?v=" + url
-    if getNext(file):
-        nextUrl = urlList[-1]
-        with open(file,"r") as infile:
-            with open(webpages + url ,"wb") as outfile:
-                outfile.write("nextUrl " + nextUrl + "\n")
-                for line in infile:
-                    if "itemprop" in line:
-                        s = line.split('"')
-                        outfile.write(s[1] + " " + s[3] + "\n")
-        subprocess.call("rm " + "'watch?v=" + url + "'", shell=True)
-        return True
-    else:
-        return False
+    getNextResult = getNext(file)
+    nextUrl = getNextResult[1]
+    with open(file,"r") as infile:
+        with open(webpages + url ,"wb") as outfile:
+            outfile.write("nextUrl " + nextUrl + "\n")
+            for line in infile:
+                if "itemprop" in line:
+                    s = line.split('"')
+                    outfile.write(s[1] + " " + s[3] + "\n")
+    subprocess.call("rm " + "'watch?v=" + url + "'", shell=True)
+    return getNextResult[0] #True #returns if nextUrl is not already in UrlList i.e. "merging of branches"
+
 def getNext(infile):
     href = "href"
     h4 = "</h4>"
@@ -48,6 +47,7 @@ def getNext(infile):
             for nextt in nexttList:
                 if nextt in line:
                     nextbool = True
+                    break
             if (hot and href in line):
                 hot = False
                 start = line.rfind(href)
@@ -57,10 +57,11 @@ def getNext(infile):
                 s1 = s1[1].split("=")
                 if s1[1] in urlList:
                     print "Url already in UrlList"
-                    return False
+                    inList = False
                 else:
                     urlList.append(s1[1])
-                    return True
+                    inList = True
+                return [inList,s1[1]]
                 #return s1[1]
 
 def getAttr(url, attr):
@@ -85,16 +86,16 @@ def views():
 # main function
 
 for i in range(N):
-    if os.path.isfile(webpages + urlList[i]):
-        nextUrl = getAttr(urlList[i],"nextUrl")
+    if os.path.isfile(webpages + urlList[i]):  #
+        nextUrl = getAttr(urlList[i],"nextUrl")# here should not be urlList in order to function with multiple seeds
         if nextUrl in urlList:
             print "Url already in UrlList"
             break
         else:
             urlList.append(nextUrl)
     else:
-        downloadWebpage(urlList[i])
-        if not shrinkWebpage(urlList[i]):
+        downloadWebpage(urlList[i])           #
+        if not shrinkWebpage(urlList[i]):     # also here
             break
 views()
 
